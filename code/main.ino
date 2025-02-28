@@ -10,7 +10,7 @@ https://github.com/rwanrooy/TTGO-PAXCOUNTER-LoRa32-V2.1-TTN.git
 
 RTC_DATA_ATTR uint32_t count = 0;                           // Message counter, stored in RTC memory, survives deep sleep
 
-RTC_DATA_ATTR uint8_t bufferCircular[TARGET_ARRAY_LENGTH];  // Lista donde guardo los últimos 5 valores enviados a TTN. LA ALOJO EN LA MEMORIA RTC PARA QUE SOBREVIVA AL DEEP SLEEP
+RTC_DATA_ATTR int bufferCircular[TARGET_ARRAY_LENGTH];  // Lista donde guardo los últimos 5 valores enviados a TTN. LA ALOJO EN LA MEMORIA RTC PARA QUE SOBREVIVA AL DEEP SLEEP
 
 static uint8_t txBuffer[3];                                 // Enter the length of the payload in bytes (this has to be more than 3 if you want to receive downlinks)
 
@@ -21,11 +21,12 @@ static uint8_t rxBuffer[1];                                 // Downlink payload
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 void send(){
   buildPacket(txBuffer);
-
+  Serial.println("Estoy en send");
   //
   // Gestión del Buffer Circular (AQUÍ PARA EVITAR ENÉSIMAS ITERACIONES) -------------------------------------------------------------------------------------
   //
-  carga_valores(txBuffer[0]);
+  int valor_nuevo = (txBuffer[1] << 8) | txBuffer[0];
+  carga_valores(valor_nuevo);
   printArray();
   print_desviacion_estandar();
   print_dynamic_duty_cycle();
@@ -52,14 +53,15 @@ void sleep(){
   Serial.println();
 
   uint32_t sleep_for = (millis() < dynamic_duty_cycle()) ? dynamic_duty_cycle() - millis() : dynamic_duty_cycle(); // We sleep for the interval between messages minus the current millis, this way we distribute the messages evenly every SEND_INTERVAL millis
-  sleep_millis(sleep_for);
+  //sleep_millis(sleep_for);
+  sleep_millis(30000);
 #endif
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 // Funcion para mostrar mensajes por monitor serial segun se interactue con TTN
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
-void callback(uint8_t message){
+void callback(uint8_t message){ //callback es una 
   if(EV_JOINING == message)Serial.println("Joining TTN...");
   if(EV_JOINED == message)Serial.println("TTN joined!");
   if(EV_JOIN_FAILED == message)Serial.println("TTN join failed");
@@ -88,7 +90,7 @@ void callback(uint8_t message){
       }
       Serial.println();
     }
-    sleep();
+    sleep(); //No se si después de esto se ejecuta el manejador de EV_RESPONSE
   }
 
   if(EV_RESPONSE == message){
@@ -100,7 +102,7 @@ void callback(uint8_t message){
 
     char buffer[6];
     for(uint8_t i = 0; i < len; i++){
-      Serial.print(F(buffer));
+      Serial.print(F(buffer)); //Posible error
     }
     Serial.println();
   }
@@ -133,8 +135,9 @@ void debug_code(){
 // ===========================================================================================================================================================
 // Setup main
 // ===========================================================================================================================================================
-void setup(){
+void setup(){ //función que se ejecuta cada vez que se enciende el dispositivo
   //
+  Serial.begin(115200);
   // Debug ---------------------------------------------------------------------------------------------------------------------------------------------------
   //
   debug_code();
@@ -160,27 +163,27 @@ void setup(){
   //
   // TTN register --------------------------------------------------------------------------------------------------------------------------------------------
   //
-  ttn_register(callback);
-  ttn_join();
+  ttn_register(callback); //Registro mi callback en la lista de funciones que se llaman cuando ocurre un evento
+  ttn_join(); 
   ttn_sf(LORAWAN_SF);
   ttn_adr(LORAWAN_ADR);
+  Serial.println("Setup finalizado");
 }
 
 // ===========================================================================================================================================================
 // Loop main
 // ===========================================================================================================================================================
 void loop(){
-  ttn_loop();
-    
+  ttn_loop(); //gestiona tareas en segundo plano, mantiene el Stack de Lora en funcionamiento
   //
   // Send every SEND_INTERVAL millis -------------------------------------------------------------------------------------------------------------------------
   //
-  static uint32_t last = 0;
+  static uint32_t last = 0; //estática para que guarda su valor en cada interacción del loop
   static bool first = true;
-  if(0 == last || millis() - last > dynamic_duty_cycle()){
+  if(0 == last || millis() - last > dynamic_duty_cycle()){ //Entra la primera vez y cada vez que se cumpla el duty cycle
     last = millis();
     first = false;
-    Serial.println("TRANSMITTING");
-    send();
+    Serial.println("TRANSMITTING");//Mensaje de información
+    send();//envío los datos
   }
 }

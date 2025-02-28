@@ -15,6 +15,7 @@ int obten_distancia(){
   digitalWrite(trigPin, LOW);                               // Clear the trigPin by setting it LOW:
   delayMicroseconds(5);
 
+
   digitalWrite(trigPin, HIGH);                              // Trigger the sensor by setting the trigPin high for 10 microseconds
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
@@ -29,9 +30,9 @@ int obten_distancia(){
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 int lista_medidas[5];
 
-uint8_t obten_nivel_mediano(uint8_t muestras){
-  int distancia_sonar, distancia_mediana;
-  uint8_t nivel_mediana;
+int obten_nivel_mediano(uint8_t muestras){
+  int distancia_sonar;
+  int distancia_mediana;
 
   for(uint8_t i = 0; i < muestras; i++){
     distancia_sonar = obten_distancia();
@@ -40,7 +41,7 @@ uint8_t obten_nivel_mediano(uint8_t muestras){
       Serial.print("En el umbral superior: ");
       Serial.println(distancia_sonar);
       uint8_t index = 0;
-      while(distancia_sonar == 0 && index < 10){            // "&& i < 'valor'", así puedo evitar pasarme la vida aquí, pero reducir el error
+      while(distancia_sonar == 0 && index < 2){            // "&& i < 'valor'", así puedo evitar pasarme la vida aquí, pero reducir el error
         Serial.print("Umbral superior, corregiendo...       ");
         Serial.println(index);
         distancia_sonar = obten_distancia();
@@ -48,7 +49,7 @@ uint8_t obten_nivel_mediano(uint8_t muestras){
         mi_timer(250);                                      // Por ello, en este 'if', itero cada 250ms hasta que de una medida que no sea 0
       }
 
-      if(index == 10){
+      if(index == 2){
         Serial.println("UMBRAL SUPERIOR");
         distancia_sonar = MAX_DISTANCE;
       }
@@ -61,7 +62,7 @@ uint8_t obten_nivel_mediano(uint8_t muestras){
       Serial.print("En el umbral inferior: ");
       Serial.println(distancia_sonar);
       uint8_t index = 0;
-      while((distancia_sonar <= 24 && distancia_sonar >= 1) && index < 10){ // Itero 10 veces, cada intento en franjas de 250ms
+      while((distancia_sonar <= 24 && distancia_sonar >= 1) && index < 2){ // Itero 10 veces, cada intento en franjas de 250ms
         Serial.print("Umbral inferior, corregiendo...       ");
         Serial.println(index);
         distancia_sonar = obten_distancia();
@@ -69,7 +70,7 @@ uint8_t obten_nivel_mediano(uint8_t muestras){
         mi_timer(250); 
       }
       
-      if(index == 10){                                      // Si 10 veces seguidas da un "24", tendrá razón y lo acepto
+      if(index ==2){                                      // Si 10 veces seguidas da un "24", tendrá razón y lo acepto
         Serial.println("UMBRAL INFERIOR");
         distancia_sonar = MIN_DISTANCE;
       }
@@ -86,9 +87,37 @@ uint8_t obten_nivel_mediano(uint8_t muestras){
     lista_medidas[i] = distancia_sonar;
     mi_timer(1000);
   }
+  Serial.print("Lista de medidas antes de calcular la mediana: ");
+  for (int j = 0; j < muestras; j++) {
+    Serial.print(lista_medidas[j]);
+    Serial.print(" ");
+  }
+  Serial.println();
   distancia_mediana = QuickMedian<int>::GetMedian(lista_medidas, muestras);
-  nivel_mediana = -((100*(distancia_mediana - 24))/376)+100; // Fórmula para calcular de forma lineal el porcentaje de nivel de agua
-  return nivel_mediana;
+  Serial.println(distancia_mediana);
+  //nivel_mediana = -((100*(distancia_mediana - 24))/376)+100; // Fórmula para calcular de forma lineal el porcentaje de nivel de agua
+  return distancia_mediana;
+}
+
+// -----------------------------------------------------------------------------------------------------------------------------------------------------------
+// Funcion para calcular el nivel de batería 
+// -----------------------------------------------------------------------------------------------------------------------------------------------------------
+uint8_t obten_nivel_bateria() {
+  float VBAT = (float)(analogRead(VBATPIN)) / 4095 * 2 * V_REF; // Conversión del ADC a voltaje
+  float sin_offset = VBAT + 0.22; // Ajuste por el offset de medida
+  
+  uint8_t nivel_bateria = constrain((sin_offset - 3.1) * (100.0 / (4.2 - 3.1)), 0, 100); // Cálculo del porcentaje
+
+  /*Serial.print("Lectura ADC: ");
+  Serial.print(analogRead(VBATPIN));  
+  Serial.print(" - Voltaje: ");
+  Serial.print(sin_offset, 2);
+  Serial.print("V - Porcentaje: ");
+  Serial.print(nivel_bateria);
+  Serial.println("%");*/ 
+  //Mensajes de debugging
+
+  return nivel_bateria;//devuelvo el nivel de la batería 
 }
 
 // ===========================================================================================================================================================
@@ -98,23 +127,18 @@ void buildPacket(uint8_t txBuffer[3]){                      // Uso 'uint8_t' par
   //
   // Distancia -----------------------------------------------------------------------------------------------------------------------------------------------
   //
-  uint8_t nivel_mediano = obten_nivel_mediano(5);
-  Serial.print("Nivel de agua: ");
+  int nivel_mediano = obten_nivel_mediano(5);
+  Serial.print("Distancia al agua: ");
   Serial.print(nivel_mediano);
-  Serial.println("%");
+  Serial.println("cm");
 
-  txBuffer[0] = lowByte(nivel_mediano);                       // Uso únicamente el lowByte ya que estoy hablando de un porcentaje, del 0% al 100%, valores que no superan 255 y caben en un byte
-
+  txBuffer[0] = lowByte(nivel_mediano);                       // Uso dos bytes ya que el sensor mide de 23-400 cm
+  txBuffer[1] = highByte(nivel_mediano);
   //
   // Batería -------------------------------------------------------------------------------------------------------------------------------------------------
   //
-  float VBAT;
-  VBAT = (float)(analogRead(VBATPIN)) / 4095*2*3.3*1.1;     // Conversión del valor analógico del pin a su voltaje correspondiente
-  uint8_t nivel_bateria = 50*(VBAT - 2.2);                  // Relacion lineal (muy simplificada) donde asocio el rango 3.1V - 4.2V al 0% - 100%
+  uint8_t nivel_bateria = obten_nivel_bateria();
+  txBuffer[2] = lowByte(nivel_bateria);
 
-  Serial.print("Nivel de batería: ");
-  Serial.print(nivel_bateria);
-  Serial.println("%");
 
-  txBuffer[1] = lowByte(nivel_bateria);
 }

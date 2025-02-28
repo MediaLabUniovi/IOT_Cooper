@@ -7,7 +7,7 @@ https://github.com/rwanrooy/TTGO-PAXCOUNTER-LoRa32-V2.1-TTN.git
 // Funcion para construir el array circular
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 void carga_valores(int nivel){
-  uint8_t valor_nuevo = nivel;                               // Cargo los nuevos valores leídos por el sensor
+  int valor_nuevo = nivel;                               // Cargo los nuevos valores leídos por el sensor
 
   for (int i = TARGET_ARRAY_LENGTH - 1; i > 0; i--){         // El índice del bucle va desde la última posición del array a la primera
     bufferCircular[i] = bufferCircular[i - 1];               // El índice del array es igual al índice anterior, "chocan" los valores desde la izquierda y se "barren" a la derecha

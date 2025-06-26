@@ -33,8 +33,9 @@ void ttn_register(void (*callback)(uint8_t message));
 #define SERIAL_BAUD             115200      // Serial debug baud rate
 #define ENABLE_DEBUG            0           // Serial debug on/off
 #define SLEEP_BETWEEN_MESSAGES  1           // Do sleep between messages
-#define SEND_INTERVAL_RELAXED   60000     // Sleep for these many millis
-#define SEND_INTERVAL_INTENSIVE 30000
+#define SEND_INTERVAL_RELAXED   600000     // Sleep for these many millis
+#define SEND_INTERVAL_INTENSIVE 300000
+#define INTERVAL                30000   // Wait until next message if not sleep (AMF)
 #define LORAWAN_PORT            1           // Port the messages will be sent to
 #define LORAWAN_CONFIRMED_EVERY 0           // Send confirmed message every these many messages (0 means never)
 #define LORAWAN_SF              DR_SF7      // Spreading factor
@@ -61,11 +62,12 @@ void ttn_register(void (*callback)(uint8_t message));
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 // Sensores
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
-#define trigPin         13                  // Defino pin para 'Trig' - AJ-SR04M
-#define echoPin         12                  // Defino pin para 'Echo' - AJ-SR04M
+#define trigPin         13                  // Defino pin para 'Trig' - JSN-SR04T
+#define echoPin         12                  // Defino pin para 'Echo' - JSN-SR04T
 #define MAX_DISTANCE    400                 // En 'MAX_DISTANCE' guardaré de forma inmutable la máxima distancia a la que funciona el sensor, unos 400 a 500 cm
 #define MIN_DISTANCE    23                  // En 'MIN_DISTANCE' guardaré de forma inmutable la mínima distancia a la que funciona el sensor, por debajo de 24 cm, siempre seran 24 cm
-#define VBATPIN         35
+#define VBATPIN         34
+#define VSLEEP_PIN      15
                   // Defino pin 'vbatPin' - Voltaje
 #define VOUT_PIN        0                   // Defino un pin que configuraré a siempre 'HIGH' para alimentar el sensor y que lo desconecte tras el deep sleep
 

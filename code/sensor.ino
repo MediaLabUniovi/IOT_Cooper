@@ -103,19 +103,19 @@ int obten_nivel_mediano(uint8_t muestras){
 // Funcion para calcular el nivel de batería 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 uint8_t obten_nivel_bateria() {
+  analogReadResolution(12);
   float VBAT = (float)(analogRead(VBATPIN)) / 4095 * 2 * V_REF; // Conversión del ADC a voltaje
-  float sin_offset = VBAT + 0.22; // Ajuste por el offset de medida
+  float sin_offset = VBAT + 0.3; // Ajuste por el offset de medida
   
   uint8_t nivel_bateria = constrain((sin_offset - 3.1) * (100.0 / (4.2 - 3.1)), 0, 100); // Cálculo del porcentaje
 
-  /*Serial.print("Lectura ADC: ");
+  Serial.print("Lectura ADC: ");
   Serial.print(analogRead(VBATPIN));  
   Serial.print(" - Voltaje: ");
   Serial.print(sin_offset, 2);
   Serial.print("V - Porcentaje: ");
   Serial.print(nivel_bateria);
-  Serial.println("%");*/ 
-  //Mensajes de debugging
+  Serial.println("%");
 
   return nivel_bateria;//devuelvo el nivel de la batería 
 }
@@ -132,7 +132,7 @@ void buildPacket(uint8_t txBuffer[3]){                      // Uso 'uint8_t' par
   Serial.print(nivel_mediano);
   Serial.println("cm");
 
-  txBuffer[0] = lowByte(nivel_mediano);                       // Uso dos bytes ya que el sensor mide de 23-400 cm
+  txBuffer[0] = lowByte(nivel_mediano);                       // Uso únicamente el lowByte ya que estoy hablando de un porcentaje, del 0% al 100%, valores que no superan 255 y caben en un byte
   txBuffer[1] = highByte(nivel_mediano);
   //
   // Batería -------------------------------------------------------------------------------------------------------------------------------------------------

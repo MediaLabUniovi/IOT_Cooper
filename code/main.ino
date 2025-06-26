@@ -53,15 +53,15 @@ void sleep(){
   Serial.println();
 
   uint32_t sleep_for = (millis() < dynamic_duty_cycle()) ? dynamic_duty_cycle() - millis() : dynamic_duty_cycle(); // We sleep for the interval between messages minus the current millis, this way we distribute the messages evenly every SEND_INTERVAL millis
-  //sleep_millis(sleep_for);
-  sleep_millis(30000);
+  sleep_millis(sleep_for);
+  //sleep_millis(30000);
 #endif
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 // Funcion para mostrar mensajes por monitor serial segun se interactue con TTN
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
-void callback(uint8_t message){ //callback es una 
+void callback(uint8_t message){
   if(EV_JOINING == message)Serial.println("Joining TTN...");
   if(EV_JOINED == message)Serial.println("TTN joined!");
   if(EV_JOIN_FAILED == message)Serial.println("TTN join failed");
@@ -135,7 +135,7 @@ void debug_code(){
 // ===========================================================================================================================================================
 // Setup main
 // ===========================================================================================================================================================
-void setup(){ //función que se ejecuta cada vez que se enciende el dispositivo
+void setup(){
   //
   Serial.begin(115200);
   // Debug ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -149,7 +149,9 @@ void setup(){ //función que se ejecuta cada vez que se enciende el dispositivo
   pinMode(trigPin, OUTPUT);                                 // trigPin (Rx) como output. Inicia los pulsos ultrasonicos cuando se pone en 'HIGH' 
   pinMode(echoPin, INPUT);                                  // echoPin (Tx) 
   pinMode(VOUT_PIN, OUTPUT);                                // Pin para alimentar al sensor, siempre a 'HIGH' y que se desconecte al entrar el deep sleep
-
+  pinMode(VSLEEP_PIN, OUTPUT);                              // Configurar el pin 14 como salida
+  
+  digitalWrite(VSLEEP_PIN, HIGH);                           // Ponerlo en alto para cortar la alimentación del transistor
   digitalWrite(VOUT_PIN, HIGH);                             // Poner a 'HIGH' siempre el pin del sensor para que haga de "Vcc"
 
   //
@@ -178,12 +180,13 @@ void loop(){
   //
   // Send every SEND_INTERVAL millis -------------------------------------------------------------------------------------------------------------------------
   //
-  static uint32_t last = 0; //estática para que guarda su valor en cada interacción del loop
+  static uint32_t last = 0; //estática para que guarden su valor en cada interacción del loop
   static bool first = true;
   if(0 == last || millis() - last > dynamic_duty_cycle()){ //Entra la primera vez y cada vez que se cumpla el duty cycle
+    Serial.println("Llegue");
     last = millis();
     first = false;
-    Serial.println("TRANSMITTING");//Mensaje de información
-    send();//envío los datos
+    Serial.println("TRANSMITTING");
+    send();
   }
 }

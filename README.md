@@ -93,7 +93,10 @@ ___
     <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/NodeRED.png" width="600"  style="margin: 10px;"/>
   </div>
   <br/>
-
+<div align="center">
+    <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/CapturaTelegram.png" width="600"  style="margin: 10px;"/>
+  </div>
+  <br/>
 - <p align="justify"> Powered by a **18650 Li-ion battery** through a dedicated **18650 Battery Shield module** with integrated **voltage booster** to ensure a stable 5V output over USB. </p>
 
 <div align="center">
@@ -124,6 +127,7 @@ ___
   <div align="center">
     <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/pcb.png" width="600"  style="margin: 10px;"/>
   </div>
+  <br/>
   <div align="center">
     <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/esquematico.png" width="600"  style="margin: 10px;"/>
   </div>

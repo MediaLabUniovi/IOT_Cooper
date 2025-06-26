@@ -80,19 +80,26 @@ ___
   </div>
   <br/>
 
-- <p align="justify"> Changes made for JSN-SR04T (Ultrasonic distance sensor) </p>
+- <p align="justify"> Uses **AJ-SR04M** ultrasonic waterproof sensor (an improved model compatible with JSN-SR04T) to measure the **distance to the water surface**. **Battery voltage** is also transmitted to The Things Network. </p>
 
   <div align="center">
     <img src="https://github.com/medialablpwan/waterlevelcontrol/blob/main/pics/61rPJNXbuNL._AC_UF894%2C1000_QL80_.jpg" width="600"  style="margin: 10px;"/>
   </div>
   <br/>
 
+- <p align="justify"> Real-time **alerts are sent via Telegram** when the measured distance crosses a configured threshold. These alerts are managed using a **Node-RED** flow. Example screenshot: </p> <div align="center"> <img src="pics/node-red-example.png" width="600" style="margin: 10px;"/> </div> <br/>
+
+- <p align="justify"> Powered by a **18650 Li-ion battery** through a dedicated **18650 Battery Shield module** with integrated **voltage booster** to ensure a stable 5V output over USB. </p>
+
+- <p align="justify"> A **flexible angled USB cable** is used to optimize space and prevent mechanical strain on the connectors. </p>
+
+
 > [!WARNING]
 > This sensor is extremely sensitive to physical disturbances. Be sure to perfectly align it perpendicularly to the surface where the ultrasonic beam bounces and also mind having direct vision to it
 
 <div align="justify">
 
-- Dynamic Data Transmission Rate implementation: send interval dynamically changes its value between 20 and 40 minutes depending on the typical deviation from the latest 5 distances sent to The Things Network (By OTAA; file [`payload_formatter.json`](https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/payload_formatter.json) is a suggestion on how to decode the sent bytes)
+- Dynamic Data Transmission Rate implementation: send interval dynamically changes its value between 5 and 10 minutes depending on the typical deviation from the latest 5 distances sent to The Things Network (By OTAA; file [`payload_formatter.json`](https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/payload_formatter.json) is a suggestion on how to decode the sent bytes)
 
   <div align="center">
     <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/Screenshot%202023-11-30%20182339.png" width="600"  style="margin: 10px;"/>
@@ -194,9 +201,10 @@ ___
 | Component | Model |
 | ------------- | ------------- |
 | Dev Module  | [LilyGO LoRa32 OLED v2.1_1.6](https://www.tinytronics.nl/shop/en/development-boards/microcontroller-boards/with-lora/lilygo-ttgo-t3-lora32-868mhz-v1.6.1-esp32) |
-| Distance sensor  | [JSN-SR04T](https://www.tinytronics.nl/shop/en/sensors/distance/waterproof-ultrasonic-sensor-jsn-sr04t) |
+| Distance sensor  | [AJ-SR04M](https://ssdielect.com/distancia-ultrasonido-obstaculos-y-reflectancia-1/3519-aj-sr04m.html) |
 | N-Channel MOSFET  | [IRF540N](https://www.amazon.es/AUKENIEN-Transistor-IRF9540N-Transistores-potencia/dp/B09TJJJXFY/ref=sr_1_7?crid=32LB9EZ8Q81R0&dib=eyJ2IjoiMSJ9.UqJKtI1towT4naZiatE1UAz3Y34XB4iKgzo6DKubwUI4RG1qKF_oX4Un0vPC8oIiA0EFIXieDXkMAloim0p3wd53thboFPEwhQTLzEYASTn-ir9NuyrY-VBMWOrpUmAWkdOI0-NIpeF4CGnXEBoyOUkkiZ55dz6yiT-UVQ5KhHcHhs34AOguiHi3PlFpSBtSQITXz6c9NVWxuNR-AgDC0xPEYvXwdFZ6dJQA9_fEU7LkaFrESMUXJF041slnfQtWcSPyd30nK2G8wFKLq59d9Q-yjADI9jY9gAWg0tpO2wI.uLG5EZvlmd2_UDPlM2LwyNBqoAfxE2lxi6x1rXETEug&dib_tag=se&keywords=irf540n&qid=1711314804&sprefix=IRF%2Caps%2C88&sr=8-7&th=1) |
 | Resistor  | [2k2](https://www.amazon.es/BOJACK-valores-resistencias-pel%C3%ADcula-carbono/dp/B08FD1XVL6/ref=sr_1_5?keywords=resistor&qid=1703351987&sr=8-5) |
+| Resistor  | [1k](https://www.amazon.es/BOJACK-valores-resistencias-pel%C3%ADcula-carbono/dp/B08FD1XVL6/ref=sr_1_5?keywords=resistor&qid=1703351987&sr=8-5) |
 | Battery  | [18650](https://www.tinytronics.nl/shop/en/power/batteries/18650/eve-18650-li-ion-battery-3100mah-10a-inr18650-33v) |
 | Solar panel  | [SYP-S0606](https://www.tinytronics.nl/shop/en/power/solar-energy/solar-panels/solar-panel-with-dc-dc-converter-and-usb-5v-1a) |
 | PCB  | [Custom (file included)](https://github.com/medialablpwan/lorawaterlevelmonitoring/tree/main/pcb) |
@@ -210,7 +218,7 @@ ___
 
 <div align="center">
 
-| JSN-SR04T | Transistor | Resistor | 18650 Shield | SYP-S0606 | LilyGO |
+| AJ-SR04M | Transistor | Resistor | 18650 Shield | SYP-S0606 | LilyGO |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | `trigger` | - | - | - | - | `13` |
 | `echo` | - | - | - | - | `12` |
@@ -373,6 +381,6 @@ ___
 > 
 > More info about our activities: [![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=for-the-badge&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/groups/9298597/)](https://www.linkedin.com/groups/9298597/)
 
-_<p align="justify"> Authors: Daniel Rodríguez Moya, Óscar Gijón, Ramón Rubio and MediaLab\_ LPWAN Workgroup :shipit: </p>_
+_<p align="justify"> Authors: Daniel Rodríguez Moya, Óscar Gijón, Bruno Lolo Neira, Ramón Rubio and MediaLab\_ LPWAN Workgroup :shipit: </p>_
 
 [^1]: Instructions on how to deploy Grafana panels are given on the repo [`medialablpwan/documentacion`](https://github.com/medialablpwan/documentacion).

@@ -87,11 +87,22 @@ ___
   </div>
   <br/>
 
-- <p align="justify"> Real-time **alerts are sent via Telegram** when the measured distance crosses a configured threshold. These alerts are managed using a **Node-RED** flow. Example screenshot: </p> <div align="center"> <img src="pics/node-red-example.png" width="600" style="margin: 10px;"/> </div> <br/>
+- <p align="justify"> Real-time **alerts are sent via Telegram** when the measured distance crosses a configured threshold. These alerts are managed using a **Node-RED** flow. Example screenshot: </p> <div align="center"> 
+
+<div align="center">
+    <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/NodeRED.png" width="600"  style="margin: 10px;"/>
+  </div>
+  <br/>
 
 - <p align="justify"> Powered by a **18650 Li-ion battery** through a dedicated **18650 Battery Shield module** with integrated **voltage booster** to ensure a stable 5V output over USB. </p>
 
+<div align="center">
+    <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/18650.png" width="600"  style="margin: 10px;"/>
+  </div>
+  <br/>
+
 - <p align="justify"> A **flexible angled USB cable** is used to optimize space and prevent mechanical strain on the connectors. </p>
+
 
 
 > [!WARNING]
@@ -111,7 +122,10 @@ ___
 - <p align="justify"> Custom PCB </p>
 
   <div align="center">
-    <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/Screenshot%202024-01-22%20172558.png" width="600"  style="margin: 10px;"/>
+    <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/pcb.png" width="600"  style="margin: 10px;"/>
+  </div>
+  <div align="center">
+    <img src="https://github.com/medialablpwan/lorawaterlevelmonitoring/blob/main/pics/esquematico.png" width="600"  style="margin: 10px;"/>
   </div>
   <br/>
 

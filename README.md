@@ -395,6 +395,7 @@ ___
 > 
 > More info about our activities: [![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=for-the-badge&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/groups/9298597/)](https://www.linkedin.com/groups/9298597/)
 
-_<p align="justify"> Authors: Daniel Rodríguez Moya, Óscar Gijón, Bruno Lolo Neira, Ramón Rubio and MediaLab\_ LPWAN Workgroup :shipit: </p>_
+_<p align="justify"> Authors: Daniel Rodríguez Moya, Óscar Gijón,  Bruno Lolo Neira, Ramón Rubio and MediaLab\_ LPWAN Workgroup :shipit: </p>_
 
 [^1]: Instructions on how to deploy Grafana panels are given on the repo [`medialablpwan/documentacion`](https://github.com/medialablpwan/documentacion).
+

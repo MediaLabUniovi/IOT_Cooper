@@ -160,7 +160,9 @@ uint16_t generate_ttn_decoder_string(char* buffer, uint16_t max_size) {
     // Campos de sensores
     if (SYSTEM_HAS_DISTANCE) {
         offset += snprintf(buffer + offset, max_size - offset,
-            "  data.distancia = (bytes[offset++] | (bytes[offset++] << 8));\n");
+            "  if (bytes.length >= 2) {\n"
+            "    data.distancia_agua = (bytes[0] | (bytes[1] << 8));\n"
+            "  }\n");
     }
 
     // Batería
@@ -168,11 +170,14 @@ uint16_t generate_ttn_decoder_string(char* buffer, uint16_t max_size) {
         "\n");
 #ifdef BATTERY_AS_PERCENTAGE
     offset += snprintf(buffer + offset, max_size - offset,
-        "  data.bateria = bytes[bytes.length - 1];\n");
+        "  if (bytes.length >= 3) {\n"
+        "    data.nivel_bateria = bytes[2];\n"
+        "  }\n");
 #else
     offset += snprintf(buffer + offset, max_size - offset,
-        "  var batteryIndex = bytes.length - 2;\n"
-        "  data.bateria = ((bytes[batteryIndex] << 8) | bytes[batteryIndex + 1]) / 100.0;\n");
+        "  if (bytes.length >= 4) {\n"
+        "    data.nivel_bateria = ((bytes[2] << 8) | bytes[3]) / 100.0;\n"
+        "  }\n");
 #endif
     offset += snprintf(buffer + offset, max_size - offset,
         "\n"

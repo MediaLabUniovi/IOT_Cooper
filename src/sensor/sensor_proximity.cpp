@@ -113,10 +113,8 @@ bool sensor_proximity_init(void) {
   pinMode(SENSOR_ECHO_PIN, INPUT);
   pinMode(SENSOR_VSLEEP_PIN, OUTPUT);
 
-  // Apagar por defecto el NPN (HIGH corta alimentación, LOW la permite según el
-  // diseño de cooperjosee)
-  digitalWrite(SENSOR_VSLEEP_PIN, HIGH);
-  // VOUT se mantiene en HIGH siempre (así era en cooperjosee)
+  // Apagar por defecto el NPN (LOW = NPN en corte = corta GND al sensor)
+  digitalWrite(SENSOR_VSLEEP_PIN, LOW);
 
   _sensor_available = true;
   Serial.println("[SENSOR] Proximidad inicializado correctamente.");
@@ -143,10 +141,7 @@ bool sensor_proximity_read_all(sensor_data_t *data) {
 
   // Encender sensor energizando el transistor NPN
   Serial.println("[SENSOR] Alimentando sensor de proximidad (NPN activado)...");
-  digitalWrite(SENSOR_VSLEEP_PIN,
-               LOW); // En cooperjosee, LOW o HIGH depende de la lógica.
-                     // Allí setup() ponía HIGH ("cortar alimentación").
-                     // Así que LOW debería encenderlo.
+  digitalWrite(SENSOR_VSLEEP_PIN, HIGH); // HIGH en base del NPN lo satura y conecta GND al sensor
   mi_timer(1500);    // 1.5s para que se estabilice al arrancar
 
   // Leer distancia con mediana de 5 muestras como en cooperjosee
@@ -154,7 +149,7 @@ bool sensor_proximity_read_all(sensor_data_t *data) {
 
   // Apagar sensor
   Serial.println("[SENSOR] Apagando sensor de proximidad (NPN desactivado)...");
-  digitalWrite(SENSOR_VSLEEP_PIN, HIGH);
+  digitalWrite(SENSOR_VSLEEP_PIN, LOW); // LOW apaga NPN y corta circuito
 
   data->distance = distancia;
   data->valid = true;

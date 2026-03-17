@@ -57,7 +57,7 @@
 #define LED_ON LOW
 
 // Información de placa
-#ifndef BOARD_VARIANT_NAME  // Solo definir si no está ya definido
+#ifndef BOARD_VARIANT_NAME // Solo definir si no está ya definido
 #define BOARD_VARIANT_NAME "T3 V1.3 SX1276"
 #endif
 
@@ -186,7 +186,8 @@
 // Otras placas pueden añadirse aquí siguiendo el mismo patrón...
 
 #else
-#error "Debes definir una placa LilyGo LoRa en config.h (ej: #define T3_V1_3_SX1276)"
+#error                                                                         \
+    "Debes definir una placa LilyGo LoRa en config.h (ej: #define T3_V1_3_SX1276)"
 #endif
 
 // =============================================================================
@@ -201,10 +202,12 @@
 // Basado en el proyecto cooperjosee.
 // ¡ATENCIÓN! En la placa T3 V1.6, los pines 15 y 13 coinciden con SPI para SD.
 // Si se utliza SD, estos pines deberán ser cambiados.
-#define SENSOR_TRIG_PIN 13                  // Pin para 'Trig' - JSN-SR04T
-#define SENSOR_ECHO_PIN 12                  // Pin para 'Echo' - JSN-SR04T
-#define SENSOR_VSLEEP_PIN 15                // Pin para controlar el transistor de alimentación (NPN)
-#define SENSOR_VOUT_PIN 0                   // Pin extra que se mantiene en HIGH (usado en cooperjosee)
+#define SENSOR_TRIG_PIN 13 // Pin para 'Trig' - JSN-SR04T
+#define SENSOR_ECHO_PIN 12 // Pin para 'Echo' - JSN-SR04T
+#define SENSOR_VSLEEP_PIN                                                      \
+  14 // Pin para controlar el transistor de alimentación (NPN)
+#define SENSOR_VOUT_PIN                                                        \
+  0 // Pin extra que se mantiene en HIGH (usado en cooperjosee)
 
 // Tipos de radio soportados
 #if defined(USING_SX1262)

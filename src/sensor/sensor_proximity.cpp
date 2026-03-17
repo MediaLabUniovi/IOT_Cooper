@@ -111,14 +111,12 @@ bool sensor_proximity_init(void) {
 
   pinMode(SENSOR_TRIG_PIN, OUTPUT);
   pinMode(SENSOR_ECHO_PIN, INPUT);
-  pinMode(SENSOR_VOUT_PIN, OUTPUT);
   pinMode(SENSOR_VSLEEP_PIN, OUTPUT);
 
   // Apagar por defecto el NPN (HIGH corta alimentación, LOW la permite según el
   // diseño de cooperjosee)
   digitalWrite(SENSOR_VSLEEP_PIN, HIGH);
   // VOUT se mantiene en HIGH siempre (así era en cooperjosee)
-  digitalWrite(SENSOR_VOUT_PIN, HIGH);
 
   _sensor_available = true;
   Serial.println("[SENSOR] Proximidad inicializado correctamente.");

@@ -125,6 +125,8 @@ typedef struct {
 // CONFIGURACIÓN DE PAYLOAD Y DATOS
 // =============================================================================
 
+#define SENSOR_HAS_DISTANCE 1
+
 // Determinación automática de capacidades del sistema
 #if defined(ENABLE_SENSOR_PROXIMITY) && SENSOR_HAS_DISTANCE
 #define SYSTEM_HAS_DISTANCE 1

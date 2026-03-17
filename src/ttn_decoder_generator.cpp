@@ -51,8 +51,10 @@ static void print_decoder_header() {
  * @brief Imprime el código para decodificar distancia
  */
 static void print_distance_decoder() {
-    Serial.println(F("  // Distancia (cm, Little Endian)"));
-    Serial.println(F("  data.distancia = (bytes[offset++] | (bytes[offset++] << 8));"));
+    Serial.println(F("  // Distancia al agua"));
+    Serial.println(F("  if (bytes.length >= 2) {"));
+    Serial.println(F("    data.distancia_agua = (bytes[0] | (bytes[1] << 8));"));
+    Serial.println(F("  }"));
 }
 
 /**
@@ -61,12 +63,15 @@ static void print_distance_decoder() {
 static void print_battery_decoder() {
     Serial.println(F(""));
 #ifdef BATTERY_AS_PERCENTAGE
-    Serial.println(F("  // Batería en porcentaje (0-100%) - Último byte"));
-    Serial.println(F("  data.bateria = bytes[bytes.length - 1];"));
+    Serial.println(F("  // Batería en porcentaje"));
+    Serial.println(F("  if (bytes.length >= 3) {"));
+    Serial.println(F("    data.nivel_bateria = bytes[2];"));
+    Serial.println(F("  }"));
 #else
-    Serial.println(F("  // Batería en voltaje (V * 100) - Últimos 2 bytes"));
-    Serial.println(F("  var batteryIndex = bytes.length - 2;"));
-    Serial.println(F("  data.bateria = ((bytes[batteryIndex] << 8) | bytes[batteryIndex + 1]) / 100.0;"));
+    Serial.println(F("  // Batería en voltaje"));
+    Serial.println(F("  if (bytes.length >= 4) {"));
+    Serial.println(F("    data.nivel_bateria = ((bytes[2] << 8) | bytes[3]) / 100.0;"));
+    Serial.println(F("  }"));
 #endif
     Serial.println(F(""));
 }

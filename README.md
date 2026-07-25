@@ -1,3 +1,9 @@
+<img width="935" height="659" alt="imagen" src="https://github.com/user-attachments/assets/221a95be-81c0-4e78-9349-08ce7716aa0f" />
+
+<img width="688" height="610" alt="imagen" src="https://github.com/user-attachments/assets/fe3c36bc-6043-4863-aa5c-2857bcdb9427" />
+
+
+
 # Sensor Cooper
 
 **Sensor Cooper** es un sistema de monitorización IoT de bajo consumo basado en LoRaWAN, diseñado específicamente para medir el nivel y la altura del agua en ríos y arroyos en tiempo real. 
